@@ -1,0 +1,235 @@
+class VisualEngine {
+  constructor() {
+    this.noiseCanvas = document.getElementById('noise-canvas');
+    this.noiseCtx = this.noiseCanvas ? this.noiseCanvas.getContext('2d') : null;
+    this.cctvCanvas = document.getElementById('cctv-canvas');
+    this.cctvCtx = this.cctvCanvas ? this.cctvCanvas.getContext('2d') : null;
+    this.anomalyOverlay = document.getElementById('anomaly-overlay');
+    this.whisperText = document.getElementById('whisper-text');
+    this.collapseScreen = document.getElementById('collapse-screen');
+    this.freezeScreen = document.getElementById('freeze-screen');
+    
+    this.currentCam = 'CAM-07';
+    this.silhouetteVisible = false;
+    this.silhouetteAlpha = 0;
+    this.silhouetteCloser = false;
+    this.cctvCorrupted = false;
+    this.char1Disappear = false;
+
+    this.initCanvases();
+    this.animate();
+  }
+
+  initCanvases() {
+    if (this.noiseCanvas) {
+      this.noiseCanvas.width = 300;
+      this.noiseCanvas.height = 200;
+    }
+    if (this.cctvCanvas) {
+      this.cctvCanvas.width = 300;
+      this.cctvCanvas.height = 180;
+    }
+  }
+
+  switchCamera(camId) {
+    this.currentCam = camId;
+    document.querySelectorAll('.cam-toggle-btn').forEach(b => b.classList.remove('active'));
+    const btn = document.getElementById(`btn-${camId.toLowerCase()}`);
+    if (btn) btn.classList.add('active');
+
+    const label = document.getElementById('cctv-feed-label');
+    if (label) {
+      if (camId === 'CAM-07') label.textContent = '● REC (IR_3200)';
+      else if (camId === 'CAM-08') label.textContent = '● CORRUPTED (SUB-9)';
+      else if (camId === 'CAM-01') label.textContent = '● ISOLATED ROOM (CH-01)';
+    }
+    
+    if (window.audioEngine) window.audioEngine.playStaticBurst(0.2, 0.2);
+  }
+
+  renderNoise() {
+    if (!this.noiseCtx) return;
+    const w = this.noiseCanvas.width;
+    const h = this.noiseCanvas.height;
+    const imgData = this.noiseCtx.createImageData(w, h);
+    const buffer32 = new Uint32Array(imgData.data.buffer);
+    const len = buffer32.length;
+    
+    for (let i = 0; i < len; i++) {
+      if (Math.random() < 0.14) {
+        const val = Math.floor(Math.random() * 255);
+        buffer32[i] = (255 << 24) | (val << 16) | (val << 8) | val;
+      }
+    }
+    this.noiseCtx.putImageData(imgData, 0, 0);
+  }
+
+  renderCCTV() {
+    if (!this.cctvCtx) return;
+    const ctx = this.cctvCtx;
+    const w = this.cctvCanvas.width;
+    const h = this.cctvCanvas.height;
+
+    ctx.fillStyle = '#060608';
+    ctx.fillRect(0, 0, w, h);
+
+    if (this.currentCam === 'CAM-07') {
+      // Изолятор
+      ctx.strokeStyle = '#14141c';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(35, 20); ctx.lineTo(w - 35, 20);
+      ctx.lineTo(w - 70, h - 25); ctx.lineTo(70, h - 25);
+      ctx.closePath(); ctx.stroke();
+
+      if (this.silhouetteVisible || Math.random() < 0.02) {
+        const targetAlpha = this.silhouetteVisible ? (this.silhouetteCloser ? 0.95 : 0.6) : 0.2;
+        this.silhouetteAlpha += (targetAlpha - this.silhouetteAlpha) * 0.1;
+        
+        ctx.save();
+        ctx.fillStyle = `rgba(2, 2, 2, ${this.silhouetteAlpha})`;
+        const jitterX = (Math.random() - 0.5) * (this.silhouetteCloser ? 2 : 6);
+        const cx = w / 2 + jitterX;
+        const cy = this.silhouetteCloser ? h / 2 - 10 : h / 2 + 10;
+        const scale = this.silhouetteCloser ? 1.6 : 1.0;
+
+        ctx.beginPath();
+        ctx.ellipse(cx, cy + 30 * scale, 28 * scale, 48 * scale, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.ellipse(cx, cy - 18 * scale, 15 * scale, 24 * scale, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (this.silhouetteVisible) {
+          ctx.fillStyle = this.silhouetteCloser ? 'rgba(255, 20, 20, 0.9)' : 'rgba(180, 20, 20, 0.55)';
+          ctx.fillRect(cx - 6 * scale, cy - 18 * scale, 3 * scale, 3 * scale);
+          ctx.fillRect(cx + 4 * scale, cy - 18 * scale, 3 * scale, 3 * scale);
+        }
+        ctx.restore();
+      }
+    } else if (this.currentCam === 'CAM-08') {
+      // Sub-Level 9
+      ctx.strokeStyle = '#220808';
+      ctx.lineWidth = 2;
+      const t = Date.now() / 600;
+      for (let i = 0; i < 6; i++) {
+        ctx.beginPath();
+        ctx.moveTo(i * 50, 0);
+        ctx.bezierCurveTo(i * 50 + Math.sin(t + i)*20, h/2, i * 40 - Math.cos(t)*15, h/2 + 30, i * 55, h);
+        ctx.stroke();
+      }
+      ctx.fillStyle = '#0f0202';
+      ctx.beginPath();
+      ctx.arc(w/2, h/2, 35 + Math.sin(t*2)*4, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (this.currentCam === 'CAM-01') {
+      // Секретная комната Character 1
+      ctx.strokeStyle = '#181825';
+      ctx.strokeRect(20, 20, w - 40, h - 40);
+      
+      // Одинокий стул
+      ctx.strokeStyle = '#333340';
+      ctx.strokeRect(w/2 - 12, h/2, 24, 25);
+      ctx.strokeRect(w/2 - 12, h/2 - 25, 24, 25);
+
+      // Редкое исчезновение фигуры прямо во время просмотра
+      const shouldShowFigure = !this.char1Disappear && (Math.sin(Date.now() / 3000) > -0.7);
+      if (shouldShowFigure) {
+        ctx.fillStyle = 'rgba(15, 15, 20, 0.85)';
+        ctx.beginPath();
+        ctx.ellipse(w/2, h/2 + 10, 14, 28, 0, 0, Math.PI * 2);
+        ctx.ellipse(w/2, h/2 - 18, 9, 12, 0, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (Math.random() < 0.05) {
+        // Текст на стене при исчезновении
+        ctx.fillStyle = '#6b1111';
+        ctx.font = '9px monospace';
+        ctx.fillText('STATION-NULL', w/2 - 35, h/2 - 30);
+      }
+    }
+
+    if (this.cctvCorrupted) {
+      for (let i = 0; i < 6; i++) {
+        ctx.fillStyle = Math.random() < 0.5 ? '#150000' : '#000000';
+        ctx.fillRect(0, Math.random() * h, w, Math.random() * 15);
+      }
+    }
+
+    const scanlineY = (Date.now() / 16) % h;
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.035)';
+    ctx.fillRect(0, scanlineY, w, 2);
+  }
+
+  async triggerAnomaly(text = 'I SEE YOU', duration = 400) {
+    if (!this.anomalyOverlay) return;
+    
+    if (window.audioEngine) {
+      await window.audioEngine.silenceBeforeStorm(350);
+      window.audioEngine.playStinger();
+      if (Math.random() < 0.45) window.audioEngine.playWhisperVoice();
+    }
+
+    if (navigator.vibrate) {
+      try { navigator.vibrate([100, 50, 200]); } catch(e){}
+    }
+
+    this.whisperText.textContent = text;
+    this.anomalyOverlay.style.opacity = '1';
+    document.body.classList.add('glitch-flash');
+
+    setTimeout(() => {
+      this.anomalyOverlay.style.opacity = '0';
+      document.body.classList.remove('glitch-flash');
+    }, duration);
+  }
+
+  triggerSystemCollapse(callback) {
+    if (window.audioEngine) {
+      window.audioEngine.playMetallicScreech();
+      window.audioEngine.playStaticBurst(2.5, 0.5);
+    }
+    document.body.classList.add('collapse-active');
+    
+    setTimeout(() => {
+      if (this.collapseScreen) {
+        this.collapseScreen.style.display = 'flex';
+      }
+      setTimeout(() => {
+        if (this.collapseScreen) this.collapseScreen.style.display = 'none';
+        document.body.classList.remove('collapse-active');
+        if (callback) callback();
+      }, 3500);
+    }, 800);
+  }
+
+  // Заморозка экрана Главы 4
+  triggerFreezeFrame(callback) {
+    if (!this.freezeScreen) return;
+    if (window.audioEngine) {
+      window.audioEngine.silenceBeforeStorm(4500);
+    }
+    
+    this.freezeScreen.style.display = 'flex';
+    const sub = document.getElementById('freeze-sub');
+    if (sub) sub.style.opacity = '0';
+
+    setTimeout(() => {
+      if (sub) sub.style.opacity = '1';
+      if (window.audioEngine) window.audioEngine.playHeartbeat();
+    }, 2000);
+
+    setTimeout(() => {
+      this.freezeScreen.style.display = 'none';
+      if (callback) callback();
+    }, 4500);
+  }
+
+  animate() {
+    this.renderNoise();
+    this.renderCCTV();
+    requestAnimationFrame(() => this.animate());
+  }
+}
+
+window.visualEngine = new VisualEngine();
