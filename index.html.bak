@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ARCHIVE // 07 : CHAPTER 4 - SUBJECT 00</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- CRT, Noise & Vignette Layers -->
+  <div id="crt-overlay"></div>
+  <div id="vignette"></div>
+  <canvas id="noise-canvas"></canvas>
+
+  <!-- Jumpscare & Anomaly Overlay -->
+  <div id="anomaly-overlay">
+    <div class="whisper-msg" id="whisper-text">I SEE YOU</div>
+  </div>
+
+  <!-- Freeze Frame Screen (Chapter 4 Final) -->
+  <div id="freeze-screen">
+    <div class="freeze-title">SUBJECT 00 HAS BEEN OBSERVING YOU.</div>
+    <div class="freeze-sub" id="freeze-sub">SESSION CONTINUES.</div>
+  </div>
+
+  <!-- Collapse / Crash Overlay for Chapter 3 Final -->
+  <div id="collapse-screen">
+    <div class="collapse-msg">YOU WERE NEVER SUPPOSED TO FIND THIS.</div>
+    <div style="color: #666; font-size: 0.9rem; letter-spacing: 2px;">CONNECTION SEVERED BY HOST ENTITY</div>
+  </div>
+
+  <!-- Boot Gateway Screen -->
+  <div id="boot-screen">
+    <div class="boot-log" id="boot-log">INITIALIZING INTERFACE...</div>
+    <button class="boot-btn" id="boot-btn">[ ENTER ARCHIVE ]</button>
+  </div>
+
+  <!-- Main UI -->
+  <div id="main-ui">
+    <header>
+      <div class="header-title">ARCHIVE // 07 : CHAPTER 4</div>
+      <div class="header-status">
+        <div class="pulse-dot"></div>
+        <span id="header-status-text">OBSERVATION ACTIVE</span>
+      </div>
+    </header>
+
+    <!-- Mobile Navigation Tabs (< 900px) -->
+    <div class="mobile-nav">
+      <button class="tab-btn active" onclick="switchTab('tree')">АРХИВ</button>
+      <button class="tab-btn" onclick="switchTab('doc')">ДОКУМЕНТ</button>
+      <button class="tab-btn" onclick="switchTab('cam')">КАМЕРА / CLI</button>
+    </div>
+
+    <div class="workspace">
+      <!-- Left Panel: Document Tree -->
+      <section class="panel tab-active" id="panel-tree">
+        <div class="panel-title">
+          <span>CLASSIFIED INDEX</span>
+          <span style="color: #444;">ACT IV</span>
+        </div>
+        <ul class="file-tree">
+          <!-- Глава 1 -->
+          <li class="file-item active" data-id="doc-01">> 1994_04_INGEST.LOG</li>
+          <li class="file-item" data-id="doc-02">> 1994_09_ADAPT.LOG</li>
+          <li class="file-item" id="item-doc-03" data-id="doc-03" style="display: none;">> 1995_INCIDENT_07.RAW</li>
+          <li class="file-item corrupted" id="item-doc-secret" data-id="doc-secret" style="display: none;">> YOU_ARE_RECORDED.SYS</li>
+          <!-- Глава 2 -->
+          <li class="file-item" id="item-doc-puzzle1" data-id="doc-puzzle1" style="display: none;">> [P1] AUDIO_FREQ_432.DAT</li>
+          <li class="file-item" id="item-doc-puzzle2" data-id="doc-puzzle2" style="display: none;">> [P2] CCTV_TIMECODE_12.DRIFT</li>
+          <li class="file-item" id="item-doc-puzzle3" data-id="doc-puzzle3" style="display: none;">> [P3] SECTOR_599330.GEO</li>
+          <li class="file-item" id="item-doc-puzzle4" data-id="doc-puzzle4" style="display: none;">> [P4] VORONIN_ENTROPY.KEY</li>
+          <li class="file-item" id="item-doc-puzzle5" data-id="doc-puzzle5" style="display: none;">> [P5] ACOUSTIC_REVERSE.WAV</li>
+          <li class="file-item corrupted" id="item-doc-sector08" data-id="doc-sector08" style="display: none;">> SECTOR-08 // OBLIVION</li>
+          <!-- Глава 3 -->
+          <li class="file-item" id="item-doc-ch2-confession" data-id="doc-ch2-confession" style="display: none;">> CHARACTER_2_CONFESSION.LOG</li>
+          <li class="file-item" id="item-doc-puzzle6" data-id="doc-puzzle6" style="display: none;">> [P6] HARMONIC_819.SPECTRA</li>
+          <li class="file-item" id="item-doc-puzzle7" data-id="doc-puzzle7" style="display: none;">> [P7] SENSOR_GRID_ALPHA.TRIAD</li>
+          <li class="file-item" id="item-doc-puzzle8" data-id="doc-puzzle8" style="display: none;">> [P8] OVERRIDE_PARADOX.SYS</li>
+          <!-- Глава 4: Character 1 & Subject 00 -->
+          <li class="file-item character1-target" id="item-doc-char01-intro" data-id="doc-char01-intro" style="display: none;">> [!] CHARACTER_01_TRANSMISSION.LOG</li>
+          <li class="file-item" id="item-doc-puzzle9" data-id="doc-puzzle9" style="display: none;">> [P9] ANACHRONISM_1989_2031.DAT</li>
+          <li class="file-item" id="item-doc-puzzle10" data-id="doc-puzzle10" style="display: none;">> [P10] CAM01_PHANTOM.NULL</li>
+          <li class="file-item" id="item-doc-puzzle11" data-id="doc-puzzle11" style="display: none;">> [P11] SPATIAL_ECHO.VECTOR</li>
+          <li class="file-item subject00-target" id="item-doc-subject00" data-id="doc-subject00" style="display: none;">> [?] SUBJECT_00.CORRUPTED</li>
+        </ul>
+        <div style="margin-top: auto; font-size: 0.68rem; color: #444; border-top: 1px solid #141418; padding-top: 8px;">
+          LOCAL_SAVE: ACTIVE<br>
+          NODE: RECURSIVE CH-01
+        </div>
+      </section>
+
+      <!-- Center Panel: Document Viewport -->
+      <section class="panel doc-viewer" id="panel-doc">
+        <div class="classified-tag">TOP SECRET // OBSERVATION ACTIVE</div>
+        <div class="doc-header">
+          <h2 id="doc-title" style="font-size: 1.05rem; color: #bbb; margin-bottom: 4px;">ЗАГРУЗКА ДОКУМЕНТА...</h2>
+          <p id="doc-meta" style="font-size: 0.72rem; color: #555;">ИНИЦИАЛИЗАЦИЯ ШИФРОВАЛЬНОГО СЕКТОРА</p>
+        </div>
+        <hr style="border: none; border-bottom: 1px solid #191924; margin-bottom: 12px;">
+        <div id="doc-body">
+          ВЫБЕРИТЕ ДОКУМЕНТ В СПИСКЕ АРХИВА.
+        </div>
+      </section>
+
+      <!-- Right Panel: CCTV & CLI -->
+      <section class="panel" id="panel-cam" style="padding: 10px;">
+        <div class="panel-title">
+          <span>OPTICAL FEED</span>
+          <div class="cam-header-ctrl">
+            <button class="cam-toggle-btn active" id="btn-cam-07" onclick="switchCCTV('CAM-07')">CAM-07</button>
+            <button class="cam-toggle-btn" id="btn-cam-08" onclick="switchCCTV('CAM-08')">CAM-08</button>
+            <button class="cam-toggle-btn" id="btn-cam-01" onclick="switchCCTV('CAM-01')" style="display: none;">CAM-01</button>
+          </div>
+        </div>
+        <div class="cam-container">
+          <div class="cam-hud">
+            <div class="cam-rec" id="cctv-feed-label">● REC (IR_3200)</div>
+            <div>SUB-LEVEL -48M</div>
+          </div>
+          <canvas id="cctv-canvas"></canvas>
+        </div>
+
+        <div class="terminal-box">
+          <div class="panel-title" style="margin-bottom: 4px;">DIAGNOSTIC CONSOLE</div>
+          <div class="terminal-log" id="terminal-log">
+            <p>> KERNEL 4.30-SEC ACTIVE</p>
+            <p>> TYPE 'HELP' FOR COMMANDS</p>
+          </div>
+          <div class="terminal-input-wrap">
+            <span class="prompt-sym">#</span>
+            <input type="text" id="cmd-input" placeholder="команда..." autocomplete="off" autocapitalize="off" spellcheck="false">
+          </div>
+          <div class="mobile-cmd-toolbar">
+            <button class="quick-cmd-btn" onclick="sendQuickCmd('status')">STATUS</button>
+            <button class="quick-cmd-btn" onclick="sendQuickCmd('help')">HELP</button>
+            <button class="quick-cmd-btn" onclick="sendQuickCmd('footsteps')">FOOTSTEPS</button>
+            <button class="quick-cmd-btn" onclick="sendQuickCmd('clear')">CLEAR</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      <div>CARRIER: SECURE | SUBJECT 00 PROTOCOL</div>
+      <div class="footer-controls">
+        <div class="volume-wrap">
+          <span>VOL:</span>
+          <input type="range" id="vol-slider" min="0" max="1" step="0.05" value="0.5">
+        </div>
+        <span>HOST: LOCAL</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Modules -->
+  <script src="js/audio_engine.js"></script>
+  <script src="js/visual_effects.js"></script>
+  <script src="js/story_engine.js"></script>
+</body>
+</html>
