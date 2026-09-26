@@ -8,6 +8,8 @@ class VisualEngine {
     this.monitorCtx = this.monitorCanvas ? this.monitorCanvas.getContext('2d') : null;
     this.screamerCanvas = document.getElementById('screamer-canvas');
     this.screamerCtx = this.screamerCanvas ? this.screamerCanvas.getContext('2d') : null;
+    this.finalCamCanvas = document.getElementById('final-cam-canvas');
+    this.finalCamCtx = this.finalCamCanvas ? this.finalCamCanvas.getContext('2d') : null;
 
     this.anomalyOverlay = document.getElementById('anomaly-overlay');
     this.whisperText = document.getElementById('whisper-text');
@@ -15,6 +17,9 @@ class VisualEngine {
     this.freezeScreen = document.getElementById('freeze-screen');
     this.monitorModal = document.getElementById('cam-monitor-modal');
     this.expungedScreamer = document.getElementById('expunged-screamer');
+    this.finalAwakenScreen = document.getElementById('final-awaken-screen');
+    this.finalCamRoom = document.getElementById('final-cam-room');
+    this.signalLostScreen = document.getElementById('signal-lost-screen');
     
     this.currentCam = 'CAM-07';
     this.zoomLevel = 1.0;
@@ -23,13 +28,12 @@ class VisualEngine {
     this.isDragging = false;
     this.dragStart = { x: 0, y: 0 };
 
-    this.silhouetteVisible = false;
-    this.silhouetteAlpha = 0;
-    this.silhouetteDistance = 1.0; // 1.0 = далеко, 0.2 = в упор к камере
-    this.silhouetteHidden = false;
-    this.cctvCorrupted = false;
+    // Дискретные фазы положения сущности на CAM-07 (меняются при возврате)
+    // 0: далеко, 1: ближе, 2: в углу, 3: исчезла, 4: в упор
+    this.entityStage = 0;
     this.cam00Visits = 0;
     this.cam00HasEntity = false;
+    this.cctvCorrupted = false;
 
     this.initCanvases();
     this.initMonitorEvents();
@@ -41,6 +45,7 @@ class VisualEngine {
     if (this.cctvCanvas) { this.cctvCanvas.width = 300; this.cctvCanvas.height = 180; }
     if (this.monitorCanvas) { this.monitorCanvas.width = 640; this.monitorCanvas.height = 400; }
     if (this.screamerCanvas) { this.screamerCanvas.width = 640; this.screamerCanvas.height = 480; }
+    if (this.finalCamCanvas) { this.finalCamCanvas.width = 640; this.finalCamCanvas.height = 400; }
   }
 
   initMonitorEvents() {
@@ -80,11 +85,6 @@ class VisualEngine {
     const b = document.getElementById(`btn-zoom-${lvl}x`);
     if (b) b.classList.add('active');
     if (window.audioEngine) window.audioEngine.playCamRelayClick();
-
-    // Если игрок зумит CAM-07 — сущность пугается и приближается
-    if (this.currentCam === 'CAM-07' && lvl > 1.0) {
-      this.silhouetteDistance = Math.max(0.25, this.silhouetteDistance - 0.25);
-    }
   }
 
   updateZoomTransform() {
@@ -109,9 +109,19 @@ class VisualEngine {
   }
 
   switchCamera(camId) {
+    const prevCam = this.currentCam;
     this.currentCam = camId;
+
+    // Если возвращаемся на CAM-07 — фаза существа меняется незаметно
+    if (camId === 'CAM-07' && prevCam !== 'CAM-07') {
+      this.entityStage = (this.entityStage + 1) % 5;
+      if (window.storyEngine) {
+        window.storyEngine.saveData.entityStage = this.entityStage;
+        window.storyEngine.writeSave(window.storyEngine.saveData);
+      }
+    }
+
     document.querySelectorAll('.cam-toggle-btn, .monitor-cam-btn').forEach(b => b.classList.remove('active'));
-    
     const b1 = document.getElementById(`btn-${camId.toLowerCase()}`);
     const b2 = document.getElementById(`mon-btn-${camId.toLowerCase()}`);
     if (b1) b1.classList.add('active');
@@ -138,7 +148,6 @@ class VisualEngine {
       window.audioEngine.playStaticBurst(0.18, 0.2);
     }
 
-    // Логика CAMERA 00
     if (camId === 'CAM-00') {
       this.handleCamera00Entrance();
     }
@@ -146,8 +155,13 @@ class VisualEngine {
 
   handleCamera00Entrance() {
     this.cam00Visits++;
+    if (window.storyEngine) {
+      window.storyEngine.saveData.cam00Visits = this.cam00Visits;
+      window.storyEngine.writeSave(window.storyEngine.saveData);
+    }
+
     if (this.cam00Visits === 1) {
-      // Первый вход: 2.5 сек пустота -> потеря сигнала
+      // Первый вход: 2.2 сек пустой бокс -> сбой развертки -> CAMERA SIGNAL LOST
       setTimeout(() => {
         if (this.currentCam === 'CAM-00') {
           const monTitle = document.getElementById('monitor-cam-name');
@@ -157,14 +171,33 @@ class VisualEngine {
           setTimeout(() => {
             this.cctvCorrupted = false;
             this.switchCamera('CAM-07');
-            if (window.storyEngine) window.storyEngine.logToTerminal('ERR: CAM-00 CARRIER DROPPED BY REMOTE HARDWARE.');
+            if (window.storyEngine) window.storyEngine.logToTerminal('ERR: CAM-00 SIGNAL LOST BY REMOTE CONTROLLER.');
           }, 1800);
         }
-      }, 2500);
+      }, 2200);
     } else {
-      // Второй и последующий вход: внутри уже находится Нечто
+      // Второй и последующие: Нечто появилось
       this.cam00HasEntity = true;
     }
+  }
+
+  getTimestampForCam(camId) {
+    const now = new Date();
+    const s = String(now.getSeconds()).padStart(2, '0');
+    const m = String(now.getMinutes()).padStart(2, '0');
+    const h = String(now.getHours()).padStart(2, '0');
+
+    if (camId === 'CAM-01') return `1989-11-04 ${h}:${m}:${s}`;
+    if (camId === 'CAM-02') return `1994-04-12 ${h}:${m}:${s}`;
+    if (camId === 'CAM-03') return `1995-09-03 ${h}:${m}:${s}`;
+    if (camId === 'CAM-07') {
+      // Редкий глитч таймкода
+      if (Math.random() < 0.05) return '2099-??-?? 99:99:99';
+      return `1994-09-03 ${h}:${m}:${s}`;
+    }
+    if (camId === 'CAM-08') return `2031-08-19 ${h}:${m}:${s}`;
+    if (camId === 'CAM-00') return 'ERROR-TIME // VOID';
+    return `1994-00-00 ${h}:${m}:${s}`;
   }
 
   renderNoise() {
@@ -188,28 +221,32 @@ class VisualEngine {
     const now = Date.now();
 
     if (this.currentCam === 'CAM-07') {
-      // Изолятор: сущность приближается/исчезает
+      // Изолятор
       ctx.strokeStyle = '#14141c'; ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(35, 20); ctx.lineTo(w - 35, 20);
       ctx.lineTo(w - 70, h - 25); ctx.lineTo(70, h - 25);
       ctx.closePath(); ctx.stroke();
 
-      // Периодическое исчезновение сущности
-      if (Math.sin(now / 4500) < -0.85) {
-        this.silhouetteHidden = true;
-      } else {
-        this.silhouetteHidden = false;
-      }
-
-      if (!this.silhouetteHidden) {
-        // Постепенное сокращение дистанции
-        const scale = 2.4 - this.silhouetteDistance * 1.4;
-        const cx = w / 2 + (Math.sin(now / 1500) * 8);
-        const cy = h / 2 + (this.silhouetteDistance * 25);
-
+      // Отрисовка фазы существа:
+      // 0: далеко, 1: ближе, 2: в углу, 3: исчезла, 4: в упор
+      if (this.entityStage !== 3) {
         ctx.save();
-        ctx.fillStyle = 'rgba(2, 2, 2, 0.9)';
+        let scale = 1.0;
+        let cx = w / 2;
+        let cy = h / 2 + 15;
+
+        if (this.entityStage === 0) {
+          scale = 0.8; cy = h / 2 - 5;
+        } else if (this.entityStage === 1) {
+          scale = 1.3; cy = h / 2 + 10;
+        } else if (this.entityStage === 2) {
+          scale = 1.2; cx = w / 4; cy = h / 2;
+        } else if (this.entityStage === 4) {
+          scale = 3.2; cy = h / 2 + 40;
+        }
+
+        ctx.fillStyle = 'rgba(2, 2, 2, 0.94)';
         ctx.beginPath();
         ctx.ellipse(cx, cy + 30 * scale, 24 * scale, 45 * scale, 0, 0, Math.PI * 2);
         ctx.fill();
@@ -224,7 +261,7 @@ class VisualEngine {
         ctx.restore();
       }
     } else if (this.currentCam === 'CAM-00') {
-      // Секретная комната: стальной ангар
+      // Секретный саркофаг
       ctx.strokeStyle = '#1b1b22';
       ctx.strokeRect(30, 30, w - 60, h - 60);
       ctx.beginPath();
@@ -235,18 +272,17 @@ class VisualEngine {
         ctx.save();
         ctx.fillStyle = '#010101';
         ctx.beginPath();
-        ctx.ellipse(w/2, h/2 + 20, 40, 70, 0, 0, Math.PI * 2);
-        ctx.ellipse(w/2, h/2 - 45, 22, 32, 0, 0, Math.PI * 2);
+        ctx.ellipse(w/2, h/2 + 20, 42, 75, 0, 0, Math.PI * 2);
+        ctx.ellipse(w/2, h/2 - 45, 24, 34, 0, 0, Math.PI * 2);
         ctx.fill();
-        // Многократные светящиеся красные точки
         ctx.fillStyle = '#ff2222';
         for (let e = -3; e <= 3; e++) {
-          ctx.fillRect(w/2 + e * 7, h/2 - 45 + Math.sin(e)*4, 2, 2);
+          ctx.fillRect(w/2 + e * 8, h/2 - 45 + Math.sin(e)*4, 2, 2);
         }
         ctx.restore();
       }
     } else if (this.currentCam === 'CAM-01') {
-      // Комната Character 1
+      // Комната со стулом Character 1
       ctx.strokeStyle = '#181825';
       ctx.strokeRect(20, 20, w - 40, h - 40);
       ctx.strokeRect(w/2 - 12, h/2, 24, 25);
@@ -259,14 +295,12 @@ class VisualEngine {
         ctx.fill();
       }
     } else if (this.currentCam === 'CAM-02') {
-      // Коридор Дельта (Пустой)
       ctx.strokeStyle = '#101016';
       for (let c = 0; c < 5; c++) {
         const off = c * 30;
         ctx.strokeRect(off, off, w - off*2, h - off*2);
       }
     } else if (this.currentCam === 'CAM-03') {
-      // Архивные стойки терминалов
       ctx.strokeStyle = '#0e1216';
       for (let s = 30; s < w - 40; s += 50) {
         ctx.strokeRect(s, 25, 35, h - 50);
@@ -276,7 +310,6 @@ class VisualEngine {
         }
       }
     } else if (this.currentCam === 'CAM-08') {
-      // Sub-Level 9 Био-кабели
       ctx.strokeStyle = '#220808'; ctx.lineWidth = 2;
       const t = now / 600;
       for (let i = 0; i < 6; i++) {
@@ -291,7 +324,11 @@ class VisualEngine {
       ctx.fill();
     }
 
-    // Помехи и скан-линия
+    // Отрисовка уникального timestamp прямо на видеокадре
+    ctx.fillStyle = 'rgba(200, 200, 200, 0.7)';
+    ctx.font = '11px monospace';
+    ctx.fillText(this.getTimestampForCam(this.currentCam), 12, h - 12);
+
     if (this.cctvCorrupted) {
       for (let i = 0; i < 8; i++) {
         ctx.fillStyle = Math.random() < 0.5 ? '#150000' : '#000000';
@@ -313,14 +350,12 @@ class VisualEngine {
     }
   }
 
-  // Специальный скример [EXPUNGED]: рука пытается пролезть через экран
   async triggerExpungedScreamer(callback) {
     if (!this.expungedScreamer || !this.screamerCanvas) return;
     const ctx = this.screamerCtx;
     const w = this.screamerCanvas.width;
     const h = this.screamerCanvas.height;
 
-    // Фаза 1: Зависание и мертвая тишина
     if (window.audioEngine) {
       await window.audioEngine.silenceBeforeStorm(1400);
     }
@@ -329,12 +364,10 @@ class VisualEngine {
     ctx.fillStyle = '#020202';
     ctx.fillRect(0, 0, w, h);
 
-    // Тихий шорох дыхания прямо перед ударом
     if (window.audioEngine) window.audioEngine.playBreathing();
 
     await new Promise(r => setTimeout(r, 900));
 
-    // Фаза 2: Вытягивание руки сквозь стекло экрана
     if (window.audioEngine) {
       window.audioEngine.playBreachImpact();
     }
@@ -350,7 +383,6 @@ class VisualEngine {
       ctx.fillStyle = 'rgba(2, 2, 2, 0.35)';
       ctx.fillRect(0, 0, w, h);
 
-      // Рендеринг приближающейся деформированной черной руки
       ctx.save();
       const scale = 0.5 + progress * progress * 3.8;
       const cx = w/2 + (Math.random()-0.5) * 15;
@@ -359,22 +391,18 @@ class VisualEngine {
       ctx.translate(cx, cy);
       ctx.scale(scale, scale);
 
-      // Рука/кисть с длинными пальцами (темный силуэт с красной каймой)
       ctx.strokeStyle = '#ff1111';
       ctx.lineWidth = 2 / scale;
       ctx.fillStyle = '#050202';
 
-      // Предплечье
       ctx.beginPath();
       ctx.moveTo(-30, 120); ctx.lineTo(-15, 20); ctx.lineTo(15, 20); ctx.lineTo(30, 120);
       ctx.fill(); ctx.stroke();
 
-      // Ладонь
       ctx.beginPath();
       ctx.ellipse(0, 0, 22, 26, 0, 0, Math.PI * 2);
       ctx.fill(); ctx.stroke();
 
-      // 5 деформированных вытянутых пальцев
       for (let f = -2; f <= 2; f++) {
         ctx.beginPath();
         ctx.moveTo(f * 8, -10);
@@ -384,24 +412,20 @@ class VisualEngine {
         ctx.stroke();
       }
 
-      // Вспышка искаженного темного лица в последний момент
       if (progress > 0.7) {
         ctx.fillStyle = 'rgba(40, 5, 5, 0.85)';
         ctx.beginPath();
         ctx.ellipse(0, -90, 40, 55, 0, 0, Math.PI * 2);
         ctx.fill();
-        // Запавшие черные глазницы
         ctx.fillStyle = '#ff0000';
         ctx.fillRect(-15, -95, 8, 4);
         ctx.fillRect(8, -95, 8, 4);
       }
-
       ctx.restore();
 
       if (progress < 1.0) {
         requestAnimationFrame(animateReach);
       } else {
-        // Фаза 3: Резкий финал скримера и сброс
         document.body.classList.add('glitch-flash');
         setTimeout(() => {
           this.expungedScreamer.style.display = 'none';
@@ -412,6 +436,72 @@ class VisualEngine {
     };
 
     requestAnimationFrame(animateReach);
+  }
+
+  // Кинематографичный финал Главы: AWAKEN -> Пустая комната -> Отражение силуэта -> SIGNAL LOST
+  triggerFinalAwakenSequence(callback) {
+    if (!this.finalAwakenScreen || !this.finalCamRoom || !this.signalLostScreen) return;
+
+    if (window.audioEngine) {
+      window.audioEngine.silenceBeforeStorm(4000);
+    }
+
+    // 1. Экран текста SUBJECT 00 AWAKE
+    this.finalAwakenScreen.style.display = 'flex';
+
+    setTimeout(() => {
+      this.finalAwakenScreen.style.display = 'none';
+      // 2. Показываем пустую комнату на весь экран
+      this.finalCamRoom.style.display = 'block';
+      const ctx = this.finalCamCtx;
+      const w = this.finalCamCanvas.width;
+      const h = this.finalCamCanvas.height;
+
+      const renderEmpty = (showReflection = false) => {
+        ctx.fillStyle = '#050507';
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = '#181822';
+        ctx.strokeRect(30, 20, w - 60, h - 40);
+
+        // Если наступил момент отражения в стекле (силуэт за спиной игрока)
+        if (showReflection) {
+          ctx.save();
+          ctx.fillStyle = 'rgba(25, 5, 5, 0.55)';
+          ctx.beginPath();
+          ctx.ellipse(w/2, h/2 - 10, 35, 60, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = 'rgba(200, 20, 20, 0.7)';
+          ctx.fillRect(w/2 - 10, h/2 - 20, 4, 3);
+          ctx.fillRect(w/2 + 6, h/2 - 20, 4, 3);
+          ctx.restore();
+        }
+      };
+
+      renderEmpty(false);
+
+      // Игрок смотрит на пустую комнату 3.2 секунды
+      setTimeout(() => {
+        // На 0.6 сек появляется силуэт в отражении стекла
+        renderEmpty(true);
+        if (window.audioEngine) window.audioEngine.playWhisperVoice();
+        if (navigator.vibrate) try { navigator.vibrate(200); } catch(e){}
+
+        setTimeout(() => {
+          // 3. Резкий обрыв: SIGNAL LOST
+          this.finalCamRoom.style.display = 'none';
+          this.signalLostScreen.style.display = 'flex';
+          if (window.audioEngine) {
+            window.audioEngine.playMetallicScreech();
+            window.audioEngine.playStaticBurst(2.0, 0.4);
+          }
+
+          setTimeout(() => {
+            this.signalLostScreen.style.display = 'none';
+            if (callback) callback();
+          }, 3500);
+        }, 600);
+      }, 3200);
+    }, 4500);
   }
 
   async triggerAnomaly(text = 'I SEE YOU', duration = 400) {
@@ -431,22 +521,6 @@ class VisualEngine {
       this.anomalyOverlay.style.opacity = '0';
       document.body.classList.remove('glitch-flash');
     }, duration);
-  }
-
-  triggerFreezeFrame(callback) {
-    if (!this.freezeScreen) return;
-    if (window.audioEngine) window.audioEngine.silenceBeforeStorm(4500);
-    this.freezeScreen.style.display = 'flex';
-    const sub = document.getElementById('freeze-sub');
-    if (sub) sub.style.opacity = '0';
-    setTimeout(() => {
-      if (sub) sub.style.opacity = '1';
-      if (window.audioEngine) window.audioEngine.playHeartbeat();
-    }, 2000);
-    setTimeout(() => {
-      this.freezeScreen.style.display = 'none';
-      if (callback) callback();
-    }, 4500);
   }
 
   animate() {

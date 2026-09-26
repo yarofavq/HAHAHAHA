@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ARCHIVE // 07 : VESSEL SYNTHESIS</title>
+  <title>ARCHIVE // 07 : AWAKENING OF SUBJECT 00</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -22,7 +22,28 @@
     <canvas id="screamer-canvas"></canvas>
   </div>
 
-  <!-- Freeze Frame Screen (Chapter 4 Final) -->
+  <!-- Final Awakening Sequence Overlays -->
+  <div id="final-awaken-screen">
+    <div class="awaken-dialog">
+      <div class="awaken-line-1">SUBJECT 00</div>
+      <div class="awaken-line-2">STATUS:</div>
+      <div class="awaken-line-3">AWAKE</div>
+      <div class="awaken-line-2">OBSERVATION:</div>
+      <div class="awaken-line-3">ACTIVE</div>
+      <div class="awaken-line-4">CAMERA IS NO LONGER WATCHING THE ROOM.</div>
+    </div>
+  </div>
+
+  <div id="final-cam-room">
+    <canvas id="final-cam-canvas"></canvas>
+  </div>
+
+  <div id="signal-lost-screen">
+    <div class="signal-lost-text">SIGNAL LOST</div>
+    <div style="color: #666; font-size: 0.9rem; letter-spacing: 3px;">HOST CARRIER UNREACHABLE</div>
+  </div>
+
+  <!-- Freeze Frame Screen (Chapter 4) -->
   <div id="freeze-screen">
     <div class="freeze-title">SUBJECT 00 HAS BEEN OBSERVING YOU.</div>
     <div class="freeze-sub" id="freeze-sub">SESSION CONTINUES.</div>
@@ -77,7 +98,7 @@
   <!-- Main UI -->
   <div id="main-ui">
     <header>
-      <div class="header-title">ARCHIVE // 07 : VESSEL SYNTHESIS</div>
+      <div class="header-title">ARCHIVE // 07 : SUBJECT 00 PROTOCOL</div>
       <div class="header-status">
         <div class="pulse-dot"></div>
         <span id="header-status-text">OBSERVATION ACTIVE</span>
@@ -96,40 +117,42 @@
       <section class="panel tab-active" id="panel-tree">
         <div class="panel-title">
           <span>CLASSIFIED INDEX</span>
-          <span style="color: #444;">ACT V</span>
+          <span style="color: #444;">ACT VI</span>
         </div>
         <ul class="file-tree">
-          <!-- Глава 1 -->
+          <!-- Главы 1-4 -->
           <li class="file-item active" data-id="doc-01">> 1994_04_INGEST.LOG</li>
           <li class="file-item" data-id="doc-02">> 1994_09_ADAPT.LOG</li>
           <li class="file-item" id="item-doc-03" data-id="doc-03" style="display: none;">> 1995_INCIDENT_07.RAW</li>
           <li class="file-item corrupted" id="item-doc-secret" data-id="doc-secret" style="display: none;">> YOU_ARE_RECORDED.SYS</li>
-          <!-- Глава 2 -->
           <li class="file-item" id="item-doc-puzzle1" data-id="doc-puzzle1" style="display: none;">> [P1] AUDIO_FREQ_432.DAT</li>
           <li class="file-item" id="item-doc-puzzle2" data-id="doc-puzzle2" style="display: none;">> [P2] CCTV_TIMECODE_12.DRIFT</li>
           <li class="file-item" id="item-doc-puzzle3" data-id="doc-puzzle3" style="display: none;">> [P3] SECTOR_599330.GEO</li>
           <li class="file-item" id="item-doc-puzzle4" data-id="doc-puzzle4" style="display: none;">> [P4] VORONIN_ENTROPY.KEY</li>
           <li class="file-item" id="item-doc-puzzle5" data-id="doc-puzzle5" style="display: none;">> [P5] ACOUSTIC_REVERSE.WAV</li>
           <li class="file-item corrupted" id="item-doc-sector08" data-id="doc-sector08" style="display: none;">> SECTOR-08 // OBLIVION</li>
-          <!-- Глава 3 -->
           <li class="file-item" id="item-doc-ch2-confession" data-id="doc-ch2-confession" style="display: none;">> CHARACTER_2_CONFESSION.LOG</li>
           <li class="file-item" id="item-doc-puzzle6" data-id="doc-puzzle6" style="display: none;">> [P6] HARMONIC_819.SPECTRA</li>
           <li class="file-item" id="item-doc-puzzle7" data-id="doc-puzzle7" style="display: none;">> [P7] SENSOR_GRID_ALPHA.TRIAD</li>
           <li class="file-item" id="item-doc-puzzle8" data-id="doc-puzzle8" style="display: none;">> [P8] OVERRIDE_PARADOX.SYS</li>
-          <!-- Глава 4 -->
           <li class="file-item character1-target" id="item-doc-char01-intro" data-id="doc-char01-intro" style="display: none;">> [!] CHARACTER_01_TRANSMISSION.LOG</li>
           <li class="file-item" id="item-doc-puzzle9" data-id="doc-puzzle9" style="display: none;">> [P9] ANACHRONISM_1989_2031.DAT</li>
           <li class="file-item" id="item-doc-puzzle10" data-id="doc-puzzle10" style="display: none;">> [P10] CAM01_PHANTOM.NULL</li>
           <li class="file-item" id="item-doc-puzzle11" data-id="doc-puzzle11" style="display: none;">> [P11] SPATIAL_ECHO.VECTOR</li>
           <li class="file-item subject00-target" id="item-doc-subject00" data-id="doc-subject00" style="display: none;">> [?] SUBJECT_00.CORRUPTED</li>
-          <!-- Новые документы Единства (Глава 5) -->
+          <!-- Единство и финал Subject 00 -->
           <li class="file-item character1-target" id="item-doc-receptacle" data-id="doc-receptacle" style="display: none;">> [!] RECEPTACLE_HYPOTHESIS.SYS</li>
           <li class="file-item" id="item-doc-puzzle14" data-id="doc-puzzle14" style="display: none;">> [P14] CAM00_OVERRIDE.KEY</li>
-          <li class="file-item subject00-target" id="item-doc-final-awaken" data-id="doc-final-awaken" style="display: none;">> [?] SUBJECT_00_AWAKEN.FINAL</li>
+          <li class="file-item" id="item-doc-vessel-ch1" data-id="doc-vessel-ch1" style="display: none;">> 1989_PROVENANCE_ZERO.LOG</li>
+          <li class="file-item" id="item-doc-vessel-ch3" data-id="doc-vessel-ch3" style="display: none;">> [P16] OPTIC_FIBER_NEXUS.DAT</li>
+          <li class="file-item" id="item-doc-sub00-origins" data-id="doc-sub00-origins" style="display: none;">> THE_UNMARKED_SPECIMEN.RAW</li>
+          <li class="file-item" id="item-doc-reflection-data" data-id="doc-reflection-data" style="display: none;">> [P17] GLASS_REFRACT_47.OPT</li>
+          <li class="file-item" id="item-doc-chrono-loop" data-id="doc-chrono-loop" style="display: none;">> [P18] CONVERGENCE_LOOP.SYS</li>
+          <li class="file-item subject00-target" id="item-doc-terminal-breach" data-id="doc-terminal-breach" style="display: none;">> [!] OPERATOR_ANCHOR.AWAKEN</li>
         </ul>
         <div style="margin-top: auto; font-size: 0.68rem; color: #444; border-top: 1px solid #141418; padding-top: 8px;">
           LOCAL_SAVE: ACTIVE<br>
-          NODE: MULTI-VESSEL
+          NODE: CONVERGENCE CORE
         </div>
       </section>
 
@@ -162,7 +185,7 @@
         <div class="cam-container" onclick="openFullscreenCam()">
           <div class="cam-hud">
             <div class="cam-rec" id="cctv-feed-label">● REC (CAM-07)</div>
-            <div>LIVE VIEW</div>
+            <div class="cam-timestamp" id="cctv-mini-time">LIVE</div>
           </div>
           <canvas id="cctv-canvas"></canvas>
           <div class="cam-fullscreen-hint">[ КЛИК: НА ВЕСЬ ЭКРАН ]</div>
@@ -171,7 +194,7 @@
         <div class="terminal-box">
           <div class="panel-title" style="margin-bottom: 4px;">DIAGNOSTIC CONSOLE</div>
           <div class="terminal-log" id="terminal-log">
-            <p>> KERNEL 4.40-SEC ACTIVE</p>
+            <p>> KERNEL 4.50-SEC ACTIVE</p>
             <p>> TYPE 'CAMERAS' OR CLICK CCTV FOR FULLSCREEN</p>
           </div>
           <div class="terminal-input-wrap">
@@ -189,7 +212,7 @@
     </div>
 
     <footer>
-      <div>CARRIER: SECURE | RECURSION COMPLETE</div>
+      <div>CARRIER: SECURE | CONVERGENCE PROTOCOL</div>
       <div class="footer-controls">
         <div class="volume-wrap">
           <span>VOL:</span>

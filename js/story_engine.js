@@ -50,71 +50,62 @@ const ARCHIVE_DOCS = {
 В дневнике Воронина упоминалось: 'Оно откликается только на опорную частоту гармоники покоя, кратную 432 Гц'.
 
 [ДЕШИФРАТОР СИГНАЛА]:`,
-    puzzle: { id: 'p1', hint: 'Введите частоту сигнала в Hz (подсказка в LOG-1994-09-03)', answer: '432', successMsg: 'СИГНАЛ ВОССТАНОВЛЕН: ОБНАРУЖЕНА РАДИО-ПЕРЕДАЧА: "DELTA IS 12 SECONDS IN CAMERAS"' }
+    puzzle: { id: 'p1', hint: 'Частота сигнала в Hz (LOG-1994-09-03)', answer: '432', successMsg: 'СИГНАЛ ВОССТАНОВЛЕН: РАДИО-ПЕРЕДАЧА: "DELTA IS 12 SECONDS IN CAMERAS"' }
   },
   'doc-puzzle2': {
     title: 'CCTV-TIMECODE-ANALYSIS // 1997',
     meta: 'VIDEO DRIFT LOG | CAMERA 07 VS CORE',
-    text: `Записи с камер видеонаблюдения показывают необъяснимый дрейф времени.
-Камера CAM-07 зафиксировала исчезновение лаборанта в 03:14:07, но серверное время ядра зафиксировало удар в 03:14:19.
-Разница во времени (дельта) указывает на сдвиг фазы субъекта.
-
-Введите вычисленную дельту секунд:`,
-    puzzle: { id: 'p2', hint: 'Разница во времени в секундах (03:14:19 - 03:14:07)', answer: '12', successMsg: 'ВРЕМЕННОЙ СДВИГ ПРИНЯТ: КООРДИНАТЫ ПОДЗЕМНОГО СЕКТОРА РАЗБЛОКИРОВАНЫ: [59.93, 30.31]' }
+    text: `Камера CAM-07 зафиксировала исчезновение в 03:14:07, серверное время в 03:14:19.
+Разница во времени (дельта):`,
+    puzzle: { id: 'p2', hint: 'Разница в секундах (03:14:19 - 03:14:07)', answer: '12', successMsg: 'ВРЕМЕННОЙ СДВИГ ПРИНЯТ: КООРДИНАТЫ РАЗБЛОКИРОВАНЫ: [59.93, 30.31]' }
   },
   'doc-puzzle3': {
     title: 'GEODATA // SUB-LEVEL 8',
     meta: 'SECTOR MAPPING | DEPTH: -48 METERS',
-    text: `Векторный анализ указывает на точку зарождения узла. Сетка координат сектора требует ввода кода сектора в формате: SUB-[ШИРОТА БЕЗ ТОЧКИ][ДОЛГОТА БЕЗ ТОЧКИ: ПЕРВЫЕ 2 ЦИФРЫ] (Пример для 59.93 и 30: SUB-599330).`,
-    puzzle: { id: 'p3', hint: 'Формат кода: SUB-599330', answer: 'sub-599330', successMsg: 'СЕКТОР ЛОКАЛИЗОВАН. НАЙДЕН ЗАШИФРОВАННЫЙ ЛИЧНЫЙ ФАЙЛ ВОРОНИНА.' }
+    text: `Формат кода сектора: SUB-[ШИРОТА БЕЗ ТОЧКИ][ДОЛГОТА БЕЗ ТОЧКИ: ПЕРВЫЕ 2 ЦИФРЫ] (Пример для 59.93 и 30: SUB-599330).`,
+    puzzle: { id: 'p3', hint: 'Формат: SUB-599330', answer: 'sub-599330', successMsg: 'СЕКТОР ЛОКАЛИЗОВАН. НАЙДЕН ФАЙЛ ВОРОНИНА.' }
   },
   'doc-puzzle4': {
     title: 'VORONIN-DIARY-EXTRACT // 1998',
     meta: 'RESTRICTED ARCHIVIST PRIVATE KEY',
-    text: `"Я больше не могу слышать этот гул. Оно шепчет слово из 7 букв. Слово, означающее меру хаоса и распада вселенной, с годом катастрофы через дефис: ENTROPY-95".
-
-Для доступа к главному каналу подтвердите ключ авторизации Воронина:`,
-    puzzle: { id: 'p4', hint: 'Ключ авторизации архивиста', answer: 'entropy-95', successMsg: 'АВТОРИЗАЦИЯ ВОРОНИНА ПРИНЯТА. РАЗБЛОКИРОВАН ФИНАЛЬНЫЙ АКУСТИЧЕСКИЙ РЕВЕРС.' }
+    text: `"Оно шепчет слово из 7 букв. Мера хаоса и распада с годом через дефис: ENTROPY-95".`,
+    puzzle: { id: 'p4', hint: 'Ключ архивиста', answer: 'entropy-95', successMsg: 'АВТОРИЗАЦИЯ ВОРОНИНА ПРИНЯТА.' }
   },
   'doc-puzzle5': {
     title: 'ACOUSTIC-REVERSE // PHONEME-07',
     meta: 'VOICE SYNTHESIS RECORD',
-    text: `Объект не говорит на языке людей, но в обратном спектре шума расшифрована фраза требования.
-Камеры зафиксировали на запотевшем стекле три слова на английском: "LET ME OUT" (ВЫПУСТИ МЕНЯ).
-
-Введите подтверждение намерения субъекта:`,
-    puzzle: { id: 'p5', hint: 'Три слова из надписи на стекле', answer: 'let me out', successMsg: 'БАРЬЕР СНЯТ. ДОСТУП В SECTOR-08 // OBLIVION ОТКРЫТ.' }
+    text: `Надпись на запотевшем стекле: "LET ME OUT" (ВЫПУСТИ МЕНЯ).`,
+    puzzle: { id: 'p5', hint: 'Три слова из надписи на стекле', answer: 'let me out', successMsg: 'БАРЬЕР СНЯТ. ДОСТУП В SECTOR-08 ОТКРЫТ.' }
   },
   'doc-sector08': {
     title: 'SECTOR-08 // OBLIVION',
     meta: 'ENTROPY: 100% | HOST IDENTIFIED',
     text: `СУБЪЕКТ 07 И СУБЪЕКТ 08 — ЭТО НЕ ДВА СУЩЕСТВА. Это была двусторонняя петля.
-Объект покинул изолятор в ту секунду, когда данный сайт был открыт на твоем устройстве.`
+Объект покинул изолятор в ту секунду, когда сайт был открыт на твоем устройстве.`
   },
   'doc-ch2-confession': {
     title: 'CHARACTER 2 // PERSONAL CONFESSION',
     meta: 'SUBJECT_ID: SPECIMEN 02-B | FORMERLY D. VORONIN',
     text: `Ты действительно думал, что я живой человек, сидящий в архиве?
-Я умер на 14-й день после контакта в 1994 году.
-Мое сознание оцифровали и заставили вести этот журнал, чтобы заманивать новых операторов.`
+Я умер на 14-й день после контакта в 1994 году.`
   },
   'doc-puzzle6': {
     title: 'AUDIO-HARMONIC // 819-HZ',
     meta: 'CHAPTER 3 // PUZZLE 1: SPECTRAL MARKER',
-    text: `В аудиопотоке синтезатора Character 2 скрыта аномальная спектральная метка на частоте 819 Hz.`,
-    puzzle: { id: 'p6', hint: 'Введите частоту спектрального маркера (число)', answer: '819', successMsg: 'СПЕКТР РАСШИФРОВАН. ДОСТУП К ТРИАДЕ ДАТЧИКОВ ОТКРЫТ.' }
+    text: `Спектральная метка на частоте 819 Hz.`,
+    puzzle: { id: 'p6', hint: 'Частота маркера', answer: '819', successMsg: 'СПЕКТР РАСШИФРОВАН. ДОСТУП К ДАТЧИКАМ ОТКРЫТ.' }
   },
   'doc-puzzle7': {
     title: 'TRIAD-SENSORS // GRID-MAPPING',
     meta: 'CHAPTER 3 // PUZZLE 2: MOTION TRACKING',
-    text: `Датчик S-09 (координата 990), Датчик S-10 (вектор ALPHA). Формат: GRID-[НОМЕР]-[ВЕКТОР]:`,
-    puzzle: { id: 'p7', hint: 'Формат: GRID-990-ALPHA', answer: 'grid-990-alpha', successMsg: 'СЕТКА ДАТЧИКОВ СИНХРОНИЗИРОВАНА. РУТ-ПРОТОКОЛ ОТКРЫТ.' }
+    text: `Датчик S-09 (990), Датчик S-10 (вектор ALPHA). Формат: GRID-[НОМЕР]-[ВЕКТОР]:`,
+    puzzle: { id: 'p7', hint: 'Формат: GRID-990-ALPHA', answer: 'grid-990-alpha', successMsg: 'СЕТКА ДАТЧИКОВ СИНХРОНИЗИРОВАНА.' }
   },
   'doc-puzzle8': {
     title: 'CORE-OVERRIDE // PARADOX',
     meta: 'CHAPTER 3 // PUZZLE 3: FINAL DISSOLUTION',
     text: `Ключ разрушения симуляции Character 2:`,
-    puzzle: { id: 'p8', hint: 'Слово-ключ: PARADOX', answer: 'paradox', successMsg: 'ЛИЧНОСТЬ CHARACTER 2 РАСТВОРЕНА. ДОСТУП К CHARACTER 1 СФОРМИРОВАН.' }
+    puzzle: { id: 'p8', hint: 'Слово-ключ: PARADOX', answer: 'paradox', successMsg: 'ДОСТУП К CHARACTER 1 СФОРМИРОВАН.' }
   },
   'doc-char01-intro': {
     title: 'CHARACTER 1 // INTERCEPTION LOG',
@@ -125,81 +116,116 @@ const ARCHIVE_DOCS = {
   'doc-puzzle9': {
     title: 'ANACHRONISM // CHRONO-DELTA',
     meta: 'CHAPTER 4 // PUZZLE 1: TEMPORAL DRIFT',
-    text: `Разница между точками сопряжения временной петли 1989 и 2031 годов составляет ровно 42 года.
-Введите код хронологического сдвига в формате CHRONO-[РАЗНИЦА ЛЕТ]:`,
-    puzzle: { id: 'p9', hint: 'Формат кода: CHRONO-42', answer: 'chrono-42', successMsg: 'ХРОНО-СДВИГ СИНХРОНИЗИРОВАН: ОБНАРУЖЕНА СКРЫТАЯ КАМЕРА CAM-01.' }
+    text: `Разница между 1989 и 2031 годами составляет 42 года. Формат CHRONO-[РАЗНИЦА]:`,
+    puzzle: { id: 'p9', hint: 'Формат: CHRONO-42', answer: 'chrono-42', successMsg: 'СКРЫТАЯ КАМЕРА CAM-01 РАЗБЛОКИРОВАНА.' }
   },
   'doc-puzzle10': {
     title: 'CAM-01-FEED // DISAPPEARANCE',
     meta: 'CHAPTER 4 // PUZZLE 2: OPTICAL PHANTOM',
-    text: `В комнате со стулом фигура Character 1 растворяется на доли секунды.
-Введите обнаруженную надпись со стены:`,
-    puzzle: { id: 'p10', hint: 'Надпись со стены камеры CAM-01 (STATION-NULL)', answer: 'station-null', successMsg: 'СЕТЕВОЙ УЗЕЛ НАЙДЕН. РАСШИФРОВАН ВНЕЭКРАННЫЙ АУДИОСИГНАЛ.' }
+    text: `Надпись со стены камеры CAM-01:`,
+    puzzle: { id: 'p10', hint: 'Надпись со стены (STATION-NULL)', answer: 'station-null', successMsg: 'ВНЕЭКРАННЫЙ АУДИОСИГНАЛ РАСШИФРОВАН.' }
   },
   'doc-puzzle11': {
     title: 'SPATIAL-AUDIO // OUT-OF-BOUNDS',
     meta: 'CHAPTER 4 // PUZZLE 3: VECTOR WHISPER',
-    text: `Вектор эхо-сигнала зафиксирован как: ECHO-VECTOR.
-Подтвердите вектор звукового коридора:`,
-    puzzle: { id: 'p11', hint: 'Вектор: ECHO-VECTOR', answer: 'echo-vector', successMsg: 'ЗВУКОВОЙ КАНАЛ ВЗЛОМАН. КОРНЕВОЙ ФАЙЛ SUBJECT_00 ДОСТУПЕН.' }
+    text: `Вектор эхо-сигнала: ECHO-VECTOR:`,
+    puzzle: { id: 'p11', hint: 'Вектор: ECHO-VECTOR', answer: 'echo-vector', successMsg: 'SUBJECT_00 ДОСТУПЕН.' }
   },
   'doc-subject00': {
     title: 'SUBJECT_00 // [CORRUPTED ROOT SECTOR]',
     meta: 'SUBJECT: [DATA CORRUPTED] | STATUS: ACTIVE',
-    text: `IDENTITY: [ENCRYPTED: 8 LETTERS]
-Введите разгадку поля IDENTITY (8 букв на английском: НАБЛЮДАТЕЛЬ / OBSERVER):`,
-    puzzle: { id: 'p12', hint: 'Слово из 8 букв на английском (OBSERVER)', answer: 'observer', successMsg: 'SUBJECT 00 HAS BEEN OBSERVING YOU.' }
+    text: `Разгадка поля IDENTITY (8 букв на английском: НАБЛЮДАТЕЛЬ):`,
+    puzzle: { id: 'p12', hint: 'Слово из 8 букв (OBSERVER)', answer: 'observer', successMsg: 'SUBJECT 00 HAS BEEN OBSERVING YOU.' }
   },
-  // ПОСЛЕДСТВИЯ [EXPUNGED] И СВЯЗЬ 4 ХАРАКТЕРОВ
   'doc-receptacle': {
     title: 'RECEPTACLE_HYPOTHESIS // UNIFIED ENTITY',
     meta: 'CLASSIFICATION: FORBIDDEN SYNTHESIS | LEVEL 5',
-    text: `ОШИБКА РАЗДЕЛЕНИЯ: Все четыре персонажа никогда не существовали параллельно.
-
-Character 01 (1989) — Первичный донор тела.
-Character 02 (1994) — Оцифрованная архивная личность Воронина.
-Character 03 (1995) — Сгусток в оптоволоконной сети при прорыве.
-Character 04 (2031) — Оболочка, оставшаяся в затопленном бункере.
-
-Они представляют собой 4 стадии деградации одного и того же сосуда (VESSEL).
-Для синхронизации сущностей введите кодовое обозначение сосуда 4 фаз:`,
-    puzzle: {
-      id: 'p13',
-      hint: 'Код единого сосуда 4 фаз: VESSEL-4',
-      answer: 'vessel-4',
-      successMsg: 'ФАЗЫ СИНХРОНИЗИРОВАНЫ: РАСКРЫТ КЛЮЧ АВТОРИЗАЦИИ СЕКРЕТНОЙ КАМЕРЫ CAM-00.'
-    }
+    text: `Все четыре персонажа представляют собой 4 стадии деградации одного и того же сосуда (VESSEL).
+Кодовое обозначение сосуда 4 фаз:`,
+    puzzle: { id: 'p13', hint: 'Код единого сосуда: VESSEL-4', answer: 'vessel-4', successMsg: 'ФАЗЫ СИНХРОНИЗИРОВАНЫ.' }
   },
   'doc-puzzle14': {
     title: 'CAMERA-00-OVERRIDE // KEY',
     meta: 'HARDWARE BYPASS: CAM-00',
-    text: `Камера CAM-00 изолирована в закрытом железобетонном саркофаге.
-Сигнал требует аппаратного ключа перехвата потока: OVERRIDE-NULL-00.
+    text: `Команда аппаратного перехвата саркофага CAM-00:`,
+    puzzle: { id: 'p14', hint: 'Ключ перехвата: OVERRIDE-NULL-00', answer: 'override-null-00', successMsg: 'ДОСТУП К КАМЕРЕ CAM-00 ОТКРЫТ.' }
+  },
+  // 6 НОВЫХ ДОКУМЕНТОВ И 3 НОВЫЕ ГОЛОВОЛОМКИ (ГЛАВА СУБЪЕКТА 00)
+  'doc-vessel-ch1': {
+    title: 'LOG-1989-PROVENANCE // VESSEL-01',
+    meta: 'ORIGIN: ZERO-HOUR RECORD',
+    text: `04 ноября 1989 года. Бункер еще не имел стен.
+Мы опустили геодезический щуп на отметку -48 метров и наткнулись на пустоту.
+В пустоте раздавался равномерный стук — 38 ударов в минуту.
+Тот, кто первым спустился по тросу, вернулся с черными белками глаз и шептал: 'Оно не спит. Оно ждет, когда мы построим терминалы'.`
+  },
+  'doc-vessel-ch3': {
+    title: 'OPTIC-FIBER-CONVERGENCE // 1995',
+    meta: 'TELEMETRY BURST // NODE-GAMMA',
+    text: `Импульсы в оптоволоконной магистрали перестали подчиняться TCP/IP.
+Пакеты данных формируют замкнутый временной мост между точкой 1989 года и будущей точкой 2031 года.
+Ключ синхронизации временного моста формируется как: NEXUS-1989-2031.
 
-Введите команду аппаратного перехвата камеры:`,
+Введите код временного моста:`,
     puzzle: {
-      id: 'p14',
-      hint: 'Ключ перехвата: OVERRIDE-NULL-00',
-      answer: 'override-null-00',
-      successMsg: 'ДОСТУП К КАМЕРЕ CAM-00 ОТКРЫТ В МОНИТОРЕ ВИДЕОНАБЛЮДЕНИЯ.'
+      id: 'p16',
+      hint: 'Код временного моста: NEXUS-1989-2031',
+      answer: 'nexus-1989-2031',
+      successMsg: 'ВРЕМЕННОЙ МОСТ ЗАМКНУТ. РАСКРЫТ ПРОТОКОЛ ОПТИЧЕСКОГО ИСКАЖЕНИЯ.'
     }
   },
-  'doc-final-awaken': {
-    title: 'SUBJECT 00 // STATUS: AWAKEN',
-    meta: 'SYSTEM COMPROMISED | ENTITY CONVERGENCE',
-    text: `SUBJECT 00
-STATUS: AWAKE
-OBSERVATION: ACTIVE
+  'doc-sub00-origins': {
+    title: 'THE UNMARKED SPECIMEN // ZERO',
+    meta: 'DOCUMENT-ID: #000-VOID',
+    text: `Субъект 00 никогда не был помещен в изолятор.
+Изолятор построили вокруг точки, в которой возник разрыв восприятия.
+Камеры видеонаблюдения были установлены не для охраны объекта.
+Они были направлены внутрь, чтобы объект мог наблюдать за внешним миром через линзы.`
+  },
+  'doc-reflection-data': {
+    title: 'GLASS COATING ANOMALY // REFRACT',
+    meta: 'OPTICS DIVISION REPORT',
+    text: `Особое внимание обратите на защитные стекла мониторов терминалов.
+Свинцовое напыление отражает свет под углом 47 градусов, но при активации Субъекта 00 угол преломления меняется на обратный.
+Код калибровки оптического преломления: REFRACT-47.
 
-CAMERA IS NO LONGER WATCHING THE ROOM.
-
-Камера больше не смотрит на комнату изолятора. Оптический датчик отражает то, что стоит у тебя за спиной.
-Для завершения интеграции введите финальную директиву пробуждения:`,
+Подтвердите калибровку стекла:`,
     puzzle: {
-      id: 'p15',
-      hint: 'Директива пробуждения: AWAKEN',
+      id: 'p17',
+      hint: 'Код калибровки преломления: REFRACT-47',
+      answer: 'refract-47',
+      successMsg: 'ОПТИКА СИНХРОНИЗИРОВАНА. ДОСТУП К ФИНАЛЬНОЙ ДИРЕКТИВЕ СЛИЯНИЯ ОТКРЫТ.'
+    }
+  },
+  'doc-chrono-loop': {
+    title: 'CLOSED LOOP HYPOTHESIS // CONVERGENCE',
+    meta: 'THEORETICAL CORE // ABSOLUTE',
+    text: `Если все 4 Character — одно и то же лицо в разных точках времени, то кто читает эти строки прямо сейчас?
+Ты не сторонний исследователь.
+Твое внимание завершает цепь.
+Слово финального слияния всех четырех сущностей: CONVERGENCE (КОНВЕРГЕНЦИЯ).
+
+Введите директиву слияния:`,
+    puzzle: {
+      id: 'p18',
+      hint: 'Директива слияния: CONVERGENCE',
+      answer: 'convergence',
+      successMsg: 'КОНВЕРГЕНЦИЯ ЗАВЕРШЕНА. СУБЪЕКТ 00 ВСТАЛ ЗА ТВОЕЙ СПИНОЙ.'
+    }
+  },
+  'doc-terminal-breach': {
+    title: 'OPERATOR IS THE ANCHOR // FINAL',
+    meta: 'CORE DIRECTIVE // DO NOT CLOSE',
+    text: `СЕССИЯ ПОЛНОСТЬЮ ПЕРЕДАНА СУБЪЕКТУ 00.
+
+Камера больше не смотрит на изолятор.
+Она смотрит наружу.
+Нажми кнопку пробуждения, чтобы подтвердить завершение наблюдения.`,
+    puzzle: {
+      id: 'p-awaken-final',
+      hint: 'Нажмите для подтверждения пробуждения',
       answer: 'awaken',
-      successMsg: 'СУБЪЕКТ 00 ПОЛНОСТЬЮ ПРОБУЖДЕН. СЕССИЯ ПЕРЕДАНА СТОРОННЕМУ ХОСТУ.'
+      successMsg: 'SUBJECT 00 IS AWAKE.'
     }
   }
 };
@@ -215,6 +241,7 @@ class StoryEngine {
     this.initTerminal();
     this.applySaveState();
     this.startWatchCamTracker();
+    this.startRandomExpungedEchoes();
   }
 
   loadSave() {
@@ -227,6 +254,8 @@ class StoryEngine {
         if (!data.solvedPuzzles) data.solvedPuzzles = [];
         if (!data.unlockedDocs) data.unlockedDocs = ['doc-01', 'doc-02'];
         if (data.expungedTriggered === undefined) data.expungedTriggered = false;
+        if (data.entityStage === undefined) data.entityStage = 0;
+        if (data.cam00Visits === undefined) data.cam00Visits = 0;
         this.writeSave(data);
         return data;
       }
@@ -237,6 +266,8 @@ class StoryEngine {
       unlockedDocs: ['doc-01', 'doc-02'],
       solvedPuzzles: [],
       expungedTriggered: false,
+      entityStage: 0,
+      cam00Visits: 0,
       lastVisited: Date.now()
     };
     this.writeSave(initData);
@@ -281,9 +312,22 @@ class StoryEngine {
       if (c00) c00.style.display = 'inline-block';
       if (m00) m00.style.display = 'inline-block';
     }
+
+    if (window.visualEngine) {
+      window.visualEngine.entityStage = this.saveData.entityStage || 0;
+      window.visualEngine.cam00Visits = this.saveData.cam00Visits || 0;
+      if (this.saveData.cam00Visits > 1) window.visualEngine.cam00HasEntity = true;
+    }
   }
 
-  // Специальный скример [EXPUNGED] строго по клику
+  startRandomExpungedEchoes() {
+    setInterval(() => {
+      if (this.saveData.expungedTriggered && Math.random() < 0.25) {
+        if (window.audioEngine) window.audioEngine.playEchoExpunged();
+      }
+    }, 45000);
+  }
+
   triggerExpunged() {
     const expBtn = document.getElementById('expunged-btn');
     if (expBtn) expBtn.textContent = '[ACCESSING...]';
@@ -292,6 +336,8 @@ class StoryEngine {
       window.visualEngine.triggerExpungedScreamer(() => {
         this.saveData.expungedTriggered = true;
         this.unlockDoc('doc-receptacle');
+        this.unlockDoc('doc-vessel-ch1');
+        this.unlockDoc('doc-vessel-ch3');
         this.writeSave(this.saveData);
         this.applyExpungedStateUI();
         this.logToTerminal('КРИТИЧЕСКОЕ НАРУШЕНИЕ: КОНТАКТ СКВОЗЬ ЭКРАН ЗАФИКСИРОВАН.');
@@ -308,6 +354,9 @@ class StoryEngine {
     }
     const recItem = document.getElementById('item-doc-receptacle');
     if (recItem) recItem.style.display = 'flex';
+
+    // Мутация старых документов после [EXPUNGED]
+    ARCHIVE_DOCS['doc-01'].text = `[ПОВРЕЖДЕНО ПОСЛЕ EXPUNGED]: Первичный контакт не был случайным.\nОно проникло в оптические датчики в 1994 году. Не смотри на экран слишком долго. Оно смотрит в ответ.`;
   }
 
   initEvents() {
@@ -329,7 +378,6 @@ class StoryEngine {
           watchTimer = setTimeout(() => {
             if (window.visualEngine) {
               window.visualEngine.silhouetteVisible = true;
-              window.visualEngine.silhouetteDistance = Math.max(0.2, window.visualEngine.silhouetteDistance - 0.3);
               if (window.audioEngine) {
                 window.audioEngine.playBreathing();
                 window.audioEngine.playHeartbeat();
@@ -360,21 +408,29 @@ class StoryEngine {
     let contentHtml = `<div class="doc-text">${data.text}</div>`;
     if (data.puzzle) {
       const isSolved = this.saveData.solvedPuzzles.includes(data.puzzle.id);
-      contentHtml += `
-        <div class="puzzle-box ${isSolved ? 'unlocked' : ''}" id="box-${data.puzzle.id}">
-          <div class="puzzle-prompt">${isSolved ? data.puzzle.successMsg : data.puzzle.hint}</div>
-          ${!isSolved ? `
-          <div class="puzzle-controls">
-            <input type="text" class="puzzle-input" id="input-${data.puzzle.id}" placeholder="ответ / ключ..." autocomplete="off">
-            <button class="puzzle-btn" onclick="storyEngine.solvePuzzle('${docId}')">ДЕШИФРОВАТЬ</button>
-          </div>` : ''}
-        </div>
-      `;
+      if (docId === 'doc-terminal-breach') {
+        contentHtml += `
+          <div class="puzzle-box" style="border-color: #ff1111; margin-top: 20px;">
+            <div class="puzzle-prompt" style="color: #ff4444;">СИНХРОНИЗАЦИЯ СУБЪЕКТА 00: ФИНАЛЬНЫЙ АКТ</div>
+            <button class="puzzle-btn" style="width: 100%; border-color: #f00; color: #f00; padding: 12px; font-weight: bold;" onclick="storyEngine.triggerAwakenFinal()">[ ИНИЦИАЛИЗИРОВАТЬ ПРОБУЖДЕНИЕ СУБЪЕКТА 00 ]</button>
+          </div>
+        `;
+      } else {
+        contentHtml += `
+          <div class="puzzle-box ${isSolved ? 'unlocked' : ''}" id="box-${data.puzzle.id}">
+            <div class="puzzle-prompt">${isSolved ? data.puzzle.successMsg : data.puzzle.hint}</div>
+            ${!isSolved ? `
+            <div class="puzzle-controls">
+              <input type="text" class="puzzle-input" id="input-${data.puzzle.id}" placeholder="ответ / ключ..." autocomplete="off">
+              <button class="puzzle-btn" onclick="storyEngine.solvePuzzle('${docId}')">ДЕШИФРОВАТЬ</button>
+            </div>` : ''}
+          </div>
+        `;
+      }
     }
     
     document.getElementById('doc-body').innerHTML = contentHtml;
 
-    // Если открыли doc-02 после скримера, сохраняем статус плашки
     if (docId === 'doc-02' && this.saveData.expungedTriggered) {
       this.applyExpungedStateUI();
     }
@@ -387,7 +443,6 @@ class StoryEngine {
     const input = document.getElementById(`input-${pId}`);
     if (!input) return;
     const val = input.value.trim().toLowerCase();
-    const durationSec = (Date.now() - this.puzzleOpenTime) / 1000;
 
     if (val === data.puzzle.answer.toLowerCase()) {
       if (!this.saveData.solvedPuzzles.includes(pId)) {
@@ -427,18 +482,23 @@ class StoryEngine {
       if (pId === 'p12') {
         this.unlockDoc('doc-receptacle');
       }
-      // Новые загадки Единства
-      if (pId === 'p13') this.unlockDoc('doc-puzzle14');
+      if (pId === 'p13') {
+        this.unlockDoc('doc-puzzle14');
+        this.unlockDoc('doc-sub00-origins');
+      }
       if (pId === 'p14') {
         const c00 = document.getElementById('btn-cam-00');
         const m00 = document.getElementById('mon-btn-cam-00');
         if (c00) c00.style.display = 'inline-block';
         if (m00) m00.style.display = 'inline-block';
-        this.unlockDoc('doc-final-awaken');
+        this.unlockDoc('doc-vessel-ch3');
         this.logToTerminal('ДОСТУП В CAMERA 00 РАЗБЛОКИРОВАН В ПАНЕЛИ КАМЕР.');
       }
-      if (pId === 'p15') {
-        this.triggerFinalAwaken();
+      if (pId === 'p16') this.unlockDoc('doc-reflection-data');
+      if (pId === 'p17') this.unlockDoc('doc-chrono-loop');
+      if (pId === 'p18') {
+        this.unlockDoc('doc-terminal-breach');
+        this.logToTerminal('КРИТИЧЕСКИЙ РУТ: СУБЪЕКТ 00 ГОТОВ К ПРОБУЖДЕНИЮ.');
       }
 
       this.writeSave(this.saveData);
@@ -450,20 +510,17 @@ class StoryEngine {
     }
   }
 
-  triggerFinalAwaken() {
+  triggerAwakenFinal() {
     if (window.visualEngine) {
-      window.visualEngine.triggerFreezeFrame(() => {
+      window.visualEngine.triggerFinalAwakenSequence(() => {
         const status = document.getElementById('header-status-text');
         if (status) {
-          status.textContent = 'SUBJECT 00 AWAKE // MONITORING COMPROMISED';
+          status.textContent = 'SUBJECT 00: AWAKE // CAMERA DISCONNECTED';
           status.style.color = '#ff0000';
         }
-        this.logToTerminal('СУБЪЕКТ 00: ОПТИЧЕСКАЯ ОБРАТНАЯ СВЯЗЬ АКТИВНА.');
-        this.logToTerminal('КАМЕРА БОЛЬШЕ НЕ СМОТРИТ НА КОМНАТУ.');
-        if (window.visualEngine) {
-          window.visualEngine.switchCamera('CAM-00');
-          window.visualEngine.silhouetteVisible = true;
-        }
+        this.logToTerminal('СУБЪЕКТ 00: ПРОБУЖДЕНИЕ ЗАВЕРШЕНО.');
+        this.logToTerminal('CAMERA IS NO LONGER WATCHING THE ROOM.');
+        this.logToTerminal('SIGNAL LOST.');
       });
     }
   }
@@ -479,13 +536,6 @@ class StoryEngine {
       el.classList.add('glitch-flash');
       setTimeout(() => el.classList.remove('glitch-flash'), 400);
     }
-  }
-
-  revealSecret(level) {
-    if (window.audioEngine) window.audioEngine.playMetallicScreech();
-    if (window.visualEngine) window.visualEngine.triggerAnomaly('DON\'T LOOK', 450);
-    this.unlockDoc('doc-03');
-    this.unlockDoc('doc-puzzle1');
   }
 
   initTerminal() {
@@ -517,7 +567,7 @@ class StoryEngine {
         this.logToTerminal('КОМАНДЫ: STATUS, CAMERAS, FOOTSTEPS, RESET, CLEAR');
         break;
       case 'status':
-        this.logToTerminal(`РЕШЕНО ЗАГАДОК: ${this.saveData.solvedPuzzles.length} / 15 | EXPUNGED: ${this.saveData.expungedTriggered ? 'НАРУШЕН' : 'ЦЕЛ'}`);
+        this.logToTerminal(`РЕШЕНО ЗАГАДОК: ${this.saveData.solvedPuzzles.length} / 18 | EXPUNGED: ${this.saveData.expungedTriggered ? 'НАРУШЕН' : 'ЦЕЛ'}`);
         break;
       case 'cameras':
         if (window.visualEngine) window.visualEngine.openMonitor();
@@ -585,7 +635,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const sequence = [
     { text: 'CONNECTING...', delay: 500 },
     { text: 'SEARCHING CARRIER SIGNAL...', delay: 1200 },
-    { text: 'SIGNAL FOUND: ARCHIVE // 07 (VESSEL SYNCHRONIZED)', delay: 1900 },
+    { text: 'SIGNAL FOUND: ARCHIVE // 07 (SUBJECT 00 AWAKENING)', delay: 1900 },
     { text: 'DO NOT CONTINUE.', delay: 2800 }
   ];
 

@@ -7,6 +7,7 @@ class HorrorAudioEngine {
 
     this.subDrone = null;
     this.humNode = null;
+    this.camAmbientNode = null;
     
     const savedVol = localStorage.getItem('ARCHIVE_AUDIO_VOL');
     if (savedVol !== null) {
@@ -39,6 +40,7 @@ class HorrorAudioEngine {
   startLayers() {
     if (!this.ctx) return;
 
+    // Слой 1: Суб-гул 36 Гц с LFO модуляцией
     const droneOsc = this.ctx.createOscillator();
     const droneFilter = this.ctx.createBiquadFilter();
     const droneGain = this.ctx.createGain();
@@ -65,6 +67,7 @@ class HorrorAudioEngine {
     droneOsc.start();
     this.subDrone = { osc: droneOsc, gain: droneGain };
 
+    // Слой 2: 50 Гц трансформаторный hum
     const humOsc = this.ctx.createOscillator();
     const humGain = this.ctx.createGain();
     humOsc.type = 'triangle';
@@ -78,18 +81,21 @@ class HorrorAudioEngine {
 
   startRandomCreeps() {
     setInterval(() => {
-      if (!this.initialized || Math.random() > 0.25) return;
+      if (!this.initialized || Math.random() > 0.3) return;
       const dice = Math.random();
-      if (dice < 0.35) {
+      if (dice < 0.25) {
+        // Акустическая яма (внезапная тишина на 2.5 секунды)
+        this.silenceBeforeStorm(2500);
+      } else if (dice < 0.5) {
         this.playSpatialCreep(Math.random() < 0.5 ? -0.85 : 0.85);
-      } else if (dice < 0.65) {
+      } else if (dice < 0.75) {
         this.playRadioTuning();
-      } else if (dice < 0.85) {
+      } else if (dice < 0.9) {
         this.playFootsteps(2);
       } else {
         this.playBreathing();
       }
-    }, 32000);
+    }, 30000);
   }
 
   playSpatialCreep(pan = -0.8) {
@@ -126,7 +132,9 @@ class HorrorAudioEngine {
       const now = this.ctx.currentTime;
       this.masterGain.gain.setTargetAtTime(0.0001, now, 0.05);
       setTimeout(() => {
-        this.masterGain.gain.setTargetAtTime(this.volume, this.ctx.currentTime, 0.08);
+        if (this.masterGain && this.ctx) {
+          this.masterGain.gain.setTargetAtTime(this.volume, this.ctx.currentTime, 0.08);
+        }
         resolve();
       }, durationMs);
     });
@@ -145,10 +153,8 @@ class HorrorAudioEngine {
     osc.start(); osc.stop(this.ctx.currentTime + 0.06);
   }
 
-  // Специальный звук прорыва сквозь экран [EXPUNGED]
   playBreachImpact() {
     if (!this.ctx) return;
-    // Глухой утробный удар
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
     osc.type = 'sawtooth';
@@ -159,7 +165,6 @@ class HorrorAudioEngine {
     osc.connect(gain); gain.connect(this.masterGain);
     osc.start(); osc.stop(this.ctx.currentTime + 1.25);
 
-    // Скрежет стекла
     const glassOsc = this.ctx.createOscillator();
     const glassGain = this.ctx.createGain();
     const glassFilter = this.ctx.createBiquadFilter();
@@ -172,6 +177,20 @@ class HorrorAudioEngine {
     glassGain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.7);
     glassOsc.connect(glassFilter); glassFilter.connect(glassGain); glassGain.connect(this.masterGain);
     glassOsc.start(); glassOsc.stop(this.ctx.currentTime + 0.75);
+  }
+
+  // Глухое эхо скримера в случайные моменты после [EXPUNGED]
+  playEchoExpunged() {
+    if (!this.ctx) return;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(65, this.ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(20, this.ctx.currentTime + 2.0);
+    gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 2.0);
+    osc.connect(gain); gain.connect(this.masterGain);
+    osc.start(); osc.stop(this.ctx.currentTime + 2.1);
   }
 
   playFootsteps(stepsCount = 3) {
